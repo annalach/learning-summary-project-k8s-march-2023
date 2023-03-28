@@ -8,3 +8,12 @@
 - Minikube 1.29.0
 - Kubernetes 1.26.1
 - Helm 3.11.2
+
+
+```
+docker build -t learning-summary-project-k8s-march-2023:v0.1.0 -f app/Dockerfile app
+```
+
+```
+docker run -p 3000:3000 learning-summary-project-k8s-march-2023:v0.1.0 
+```
