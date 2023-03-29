@@ -25,3 +25,11 @@ minikube image load myapp:v0.1.0
 ```
 helm install myapp-release chart
 ```
+
+```
+kubectl get svc
+```
+
+```
+minikube service my-service
+```
