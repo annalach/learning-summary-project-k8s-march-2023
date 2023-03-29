@@ -5,6 +5,9 @@
 replicaCount: 1
 nodePort: 30001
 
+app:
+  port: 5000
+
 image:
   repository: nginx
   pullPolicy: IfNotPresent

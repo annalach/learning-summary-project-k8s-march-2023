@@ -2,20 +2,24 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: nginx
-  name: nginx
+    app: myapp
+  name: myapp
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: nginx
+      app: myapp
   strategy: {}
   template:
     metadata:
       labels:
-        app: nginx
+        app: myapp
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - name: myapp
+        image: myapp:v0.1.0
+        imagePullPolicy: Never
+        envFrom:
+        - configMapRef:
+            name: myapp-configmap
         resources: {}

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: myapp-configmap
+data:
+  PORT: {{ .Values.app.port | quote }}
