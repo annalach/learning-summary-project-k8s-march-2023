@@ -12,5 +12,5 @@ spec:
     targetPort: {{ .Values.app.port }}
     nodePort: {{ .Values.nodePort }}
   selector:
-    app: myapp
+    app: {{ include "common.name" . }}
   type: NodePort

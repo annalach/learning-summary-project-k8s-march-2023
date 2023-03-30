@@ -3,20 +3,20 @@ kind: Deployment
 metadata:
   labels:
     app: myapp
-  name: myapp
+  name: {{ include "common.name" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: myapp
+      app: {{ include "common.name" . }}
   strategy: {}
   template:
     metadata:
       labels:
-        app: myapp
+        app: {{ include "common.name" . }}
     spec:
       containers:
-      - name: myapp
+      - name: {{ include "common.name" . }}
         image: myapp:v0.1.0
         imagePullPolicy: Never
         envFrom:
