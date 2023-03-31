@@ -1,7 +1,6 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
-  name: myapp-configmap
+  name: {{ include "common.names.envVars" . }}
 data:
   PORT: {{ .Values.app.port | quote }}

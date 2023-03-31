@@ -1,25 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: myapp
-  name: {{ include "common.name" . }}
+  name: {{ include "common.names.deployment" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "common.name" . }}
+      app: {{ include "common.names.appName" . }}
   strategy: {}
   template:
     metadata:
       labels:
-        app: {{ include "common.name" . }}
+        app: {{ include "common.names.appName" . }}
     spec:
       containers:
-      - name: {{ include "common.name" . }}
+      - name: {{ include "common.names.appName" . }}
         image: myapp:v0.1.0
         imagePullPolicy: Never
         envFrom:
         - configMapRef:
-            name: myapp-configmap
+            name: {{ include "common.names.envVars" . }}
         resources: {}

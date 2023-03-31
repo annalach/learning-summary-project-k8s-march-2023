@@ -23,7 +23,7 @@ minikube image load myapp:v0.1.0
 ```
 
 ```
-helm install myapp-release chart
+helm install my-release chart
 ```
 
 ```
@@ -31,5 +31,5 @@ kubectl get svc
 ```
 
 ```
-minikube service my-service
+minikube service my-release-service
 ```
