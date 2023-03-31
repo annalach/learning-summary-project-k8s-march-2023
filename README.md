@@ -11,15 +11,19 @@
 
 
 ```
-docker build -t myapp:v0.1.0 -f app/Dockerfile app
+docker build -t myapp:0.1.0 -f app/Dockerfile app
 ```
 
 ```
-docker run -p 8000:8000 -e PORT=8000 myapp:v0.1.0
+docker run -p 8000:8000 -e PORT=8000 myapp:0.1.0
 ```
 
 ```
-minikube image load myapp:v0.1.0
+minikube image load myapp:0.1.0
+```
+
+```
+helm template chart
 ```
 
 ```

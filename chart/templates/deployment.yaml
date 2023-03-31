@@ -15,7 +15,23 @@ spec:
     spec:
       containers:
       - name: {{ include "common.names.appName" . }}
-        image: myapp:v0.1.0
+        image: myapp:{{ .Chart.AppVersion }}
+        readinessProbe:
+          httpGet:
+            path: /api/ready
+            port: {{ .Values.app.port }}
+          initialDelaySeconds: 20
+          timeoutSeconds: 1
+          periodSeconds: 10
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /api/healthy
+            port: {{ .Values.app.port }}
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 10
+          failureThreshold: 3
         imagePullPolicy: Never
         envFrom:
         - configMapRef:
