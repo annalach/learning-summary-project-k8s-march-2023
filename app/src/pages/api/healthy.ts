@@ -9,5 +9,9 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  if (process.env.LIVENESS_PROBE_FAILURE === 'true') {
+    res.status(500).end()
+    return
+  }
   res.status(200).end()
 }

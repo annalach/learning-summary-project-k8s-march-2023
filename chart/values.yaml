@@ -7,6 +7,8 @@ nodePort: 30001
 
 app:
   port: 5000
+  readinessProbeFailure: false
+  livenessProbeFailure: false
 
 image:
   repository: nginx

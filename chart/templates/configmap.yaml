@@ -4,3 +4,5 @@ metadata:
   name: {{ include "common.names.envVars" . }}
 data:
   PORT: {{ .Values.app.port | quote }}
+  READINESS_PROBE_FAILURE: {{ .Values.app.readinessProbeFailure | quote }}
+  LIVENESS_PROBE_FAILURE: {{ .Values.app.livenessProbeFailure | quote }}

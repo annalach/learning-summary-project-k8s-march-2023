@@ -37,3 +37,9 @@ kubectl get svc
 ```
 minikube service my-release-service
 ```
+
+```
+helm upgrade my-release chart --set app.readinessProbeFailure=true
+```
+
+A change that happens in ConfigMap doesn't trigger a rolling update of a Deployment when a ConfigMap is used as environment variables file https://github.com/kubernetes/kubernetes/issues/22368.
