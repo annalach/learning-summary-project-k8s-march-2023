@@ -16,6 +16,13 @@ spec:
       containers:
       - name: {{ include "common.names.appName" . }}
         image: myapp:{{ .Chart.AppVersion }}
+        resources:
+          requests:
+            memory: "64Mi"  # 64 mebibytes
+            cpu: "250m"     # 1/4 (v)CPU
+          limits:
+            memory: "128Mi" # 128 mebibytes
+            cpu: "500m"     # 1/2 (v)CPU
         readinessProbe:
           httpGet:
             path: /api/ready
