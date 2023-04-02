@@ -10,6 +10,9 @@ spec:
   strategy: {}
   template:
     metadata:
+      annotations:
+        # https://helm.sh/docs/howto/charts_tips_and_tricks/#automatically-roll-deployments
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       labels:
         app: {{ include "common.names.appName" . }}
     spec:
@@ -43,4 +46,3 @@ spec:
         envFrom:
         - configMapRef:
             name: {{ include "common.names.envVars" . }}
-        resources: {}
