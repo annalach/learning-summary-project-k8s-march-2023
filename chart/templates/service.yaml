@@ -11,4 +11,4 @@ spec:
     nodePort: {{ .Values.nodePort }}
   selector:
     app: {{ include "common.names.appName" . }}
-  type: NodePort
+  type: {{ if .Values.minikube }}NodePort{{ else }}ClusterIP{{ end }}
