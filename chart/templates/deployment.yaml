@@ -16,6 +16,11 @@ spec:
       labels:
         app: {{ include "common.names.appName" . }}
     spec:
+      initContainers:
+      - name: alpine
+        image: alpine:3.17
+        command: ["sleep"] # entrypoint
+        args: ["60"]       # arguments to the entrypoint
       containers:
       - name: {{ include "common.names.appName" . }}
         image: myapp:{{ .Chart.AppVersion }}
