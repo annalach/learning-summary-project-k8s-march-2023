@@ -8,7 +8,9 @@ spec:
     port: {{ .Values.app.port }}
     protocol: TCP
     targetPort: {{ .Values.app.port }}
+    {{- if .Values.minikube }}
     nodePort: {{ .Values.nodePort }}
+    {{- end }}
   selector:
     app: {{ include "common.names.appName" . }}
   type: {{ if .Values.minikube }}NodePort{{ else }}ClusterIP{{ end }}
