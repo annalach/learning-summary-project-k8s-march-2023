@@ -1,11 +1,16 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
+import { Inter } from "next/font/google";
+import { KubeConfig, CoreV1Api, V1PodList } from "@kubernetes/client-node";
+import styles from "@/styles/Home.module.css";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+type Props = {
+  data: V1PodList;
+};
+
+export default function Home(props: Props) {
   return (
     <>
       <Head>
@@ -26,7 +31,7 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              By{' '}
+              By{" "}
               <Image
                 src="/vercel.svg"
                 alt="Vercel Logo"
@@ -38,27 +43,38 @@ export default function Home() {
             </a>
           </div>
         </div>
-
         <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
-            />
-          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Ready</th>
+                <th>Status</th>
+                <th>Age</th>
+              </tr>
+            </thead>
+            <tbody>
+              {props.data.items.map((data, i) => (
+                <tr key={i}>
+                  <td>{data.metadata?.name}</td>
+                  <td>
+                    {`${data.status?.containerStatuses?.reduce(
+                      (previousValue, currentValue) => {
+                        if (currentValue.ready) {
+                          return previousValue + 1;
+                        }
+                        return previousValue;
+                      },
+                      0
+                    )} /
+                      ${data.status?.containerStatuses?.length}`}
+                  </td>
+                  <td>{data.status?.phase}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-
         <div className={styles.grid}>
           <a
             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
@@ -119,5 +135,21 @@ export default function Home() {
         </div>
       </main>
     </>
-  )
+  );
+}
+
+export async function getServerSideProps() {
+  const kc = new KubeConfig();
+  kc.loadFromDefault();
+
+  const k8sApi = kc.makeApiClient(CoreV1Api);
+
+  const response = await k8sApi.listNamespacedPod(process.env.NAMESPACE!);
+  const data = JSON.parse(JSON.stringify(response.body));
+
+  return {
+    props: {
+      data,
+    },
+  };
 }

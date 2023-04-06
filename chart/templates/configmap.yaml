@@ -7,3 +7,4 @@ data:
   PORT: {{ .Values.app.port | quote }}
   READINESS_PROBE_FAILURE: {{ .Values.app.readinessProbeFailure | quote }}
   LIVENESS_PROBE_FAILURE: {{ .Values.app.livenessProbeFailure | quote }}
+  NAMESPACE: {{ .Values.namespace | quote }}
