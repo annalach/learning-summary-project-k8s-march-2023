@@ -17,7 +17,7 @@ type Props = {
   pods: Pod[];
 };
 
-export default function Home(props: Props) {
+export default function Home(props: Props): JSX.Element {
   return (
     <>
       <Head>
@@ -66,6 +66,7 @@ export default function Home(props: Props) {
                   <td>{name}</td>
                   <td>{ready}</td>
                   <td>{status}</td>
+                  <td>{age}</td>
                 </tr>
               ))}
             </tbody>
@@ -134,7 +135,11 @@ export default function Home(props: Props) {
   );
 }
 
-export async function getServerSideProps() {
+type ServerSideProps = {
+  props: Props;
+};
+
+export async function getServerSideProps(): Promise<ServerSideProps> {
   const kc = new KubeConfig();
   kc.loadFromDefault();
 
@@ -159,16 +164,17 @@ export async function getServerSideProps() {
           if (currentValue.state?.waiting) {
             return currentValue.state?.waiting?.reason || previousValue;
           }
-
           return previousValue;
         }, "")) ||
-      status?.phase;
+      status?.phase!;
+
+    const age = getAge(status?.startTime);
 
     return {
-      name: metadata?.name,
+      name: metadata?.name!,
       ready,
       status: containerStatusesSummary,
-      age: "",
+      age,
     };
   });
 
@@ -177,4 +183,34 @@ export async function getServerSideProps() {
       pods,
     },
   };
+}
+
+function getAge(startTime?: Date): string {
+  if (!startTime) {
+    return "";
+  }
+
+  const timeDiffInMilliseconds = Date.now() - startTime.getTime();
+  const timeDiffInSeconds = Math.floor(timeDiffInMilliseconds / 1000);
+
+  const seconds = timeDiffInSeconds % 60;
+  const secondsAsString = seconds < 10 ? `0${seconds}` : seconds;
+
+  const timeDiffInMinutes = Math.floor(timeDiffInSeconds / 60);
+
+  const minutes = timeDiffInMinutes % 60;
+  const minutesAsString = minutes < 10 ? `0${minutes}` : minutes;
+
+  const hours = Math.floor(timeDiffInMinutes / 60);
+  const hoursAsString = hours < 10 ? `0${hours}` : hours;
+
+  if (hoursAsString === "00" && minutesAsString === "00") {
+    return `${secondsAsString}s`;
+  }
+
+  if (hoursAsString === "00") {
+    return `${minutesAsString}m${secondsAsString}s`;
+  }
+
+  return `${hoursAsString}h${minutesAsString}m${secondsAsString}s`;
 }
