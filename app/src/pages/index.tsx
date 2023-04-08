@@ -46,7 +46,7 @@ export default function Home(props: Props): JSX.Element {
           </div>
         </div>
         <div className={styles.info}>
-          <h1>Pods running in {props.namespace} namespace</h1>
+          <h1>Pods running in the {props.namespace} namespace</h1>
         </div>
         <div className={styles.center}>
           <table className={styles.table}>
