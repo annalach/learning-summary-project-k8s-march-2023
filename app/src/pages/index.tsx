@@ -141,7 +141,6 @@ export async function getServerSideProps() {
   const k8sApi = kc.makeApiClient(CoreV1Api);
 
   const response = await k8sApi.listNamespacedPod(process.env.NAMESPACE!);
-  console.log(JSON.stringify(response.body.items[0]));
   const pods = response.body.items.map(({ metadata, status }) => {
     const ready = `${status?.containerStatuses?.reduce(
       (previousValue, currentValue) => {
