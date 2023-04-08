@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import { KubeConfig, CoreV1Api } from "@kubernetes/client-node";
+import { KubeConfig, CoreV1Api, V1PodStatus } from "@kubernetes/client-node";
 import styles from "@/styles/Home.module.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -146,34 +146,15 @@ export async function getServerSideProps(): Promise<ServerSideProps> {
   const k8sApi = kc.makeApiClient(CoreV1Api);
 
   const response = await k8sApi.listNamespacedPod(process.env.NAMESPACE!);
-  const pods = response.body.items.map(({ metadata, status }) => {
-    const ready = `${status?.containerStatuses?.reduce(
-      (previousValue, currentValue) => {
-        if (currentValue.ready) {
-          return previousValue + 1;
-        }
-        return previousValue;
-      },
-      0
-    )} /
-    ${status?.containerStatuses?.length}`;
-
-    const containerStatusesSummary =
-      (status?.containerStatuses?.some(({ state }) => state?.waiting) &&
-        status?.containerStatuses?.reduce((previousValue, currentValue) => {
-          if (currentValue.state?.waiting) {
-            return currentValue.state?.waiting?.reason || previousValue;
-          }
-          return previousValue;
-        }, "")) ||
-      status?.phase!;
-
-    const age = getAge(status?.startTime);
+  const pods = response.body.items.map(({ metadata, status: podStatus }) => {
+    const ready = getReady(podStatus);
+    const status = getStatus(podStatus);
+    const age = getAge(Date.now(), podStatus?.startTime);
 
     return {
       name: metadata?.name!,
       ready,
-      status: containerStatusesSummary,
+      status,
       age,
     };
   });
@@ -185,12 +166,47 @@ export async function getServerSideProps(): Promise<ServerSideProps> {
   };
 }
 
-function getAge(startTime?: Date): string {
+function getReady(podStatus?: V1PodStatus): string {
+  if (!podStatus || !podStatus.containerStatuses) {
+    return "";
+  }
+
+  return `${podStatus?.containerStatuses?.reduce(
+    (previousValue, currentValue) => {
+      if (currentValue.ready) {
+        return previousValue + 1;
+      }
+      return previousValue;
+    },
+    0
+  )} /
+  ${podStatus?.containerStatuses?.length}`;
+}
+
+function getStatus(podStatus?: V1PodStatus): string {
+  if (!podStatus) {
+    return "";
+  }
+
+  const containerStatusesSummary =
+    (podStatus?.containerStatuses?.some(({ state }) => state?.waiting) &&
+      podStatus?.containerStatuses?.reduce((previousValue, currentValue) => {
+        if (currentValue.state?.waiting) {
+          return currentValue.state?.waiting?.reason || previousValue;
+        }
+        return previousValue;
+      }, "")) ||
+    podStatus?.phase;
+
+  return containerStatusesSummary || "";
+}
+
+function getAge(currentTimeInEpoch: number, startTime?: Date): string {
   if (!startTime) {
     return "";
   }
 
-  const timeDiffInMilliseconds = Date.now() - startTime.getTime();
+  const timeDiffInMilliseconds = currentTimeInEpoch - startTime.getTime();
   const timeDiffInSeconds = Math.floor(timeDiffInMilliseconds / 1000);
 
   const seconds = timeDiffInSeconds % 60;
