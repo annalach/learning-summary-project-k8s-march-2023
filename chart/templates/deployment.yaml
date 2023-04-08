@@ -17,6 +17,7 @@ spec:
       labels:
         app: {{ include "common.names.appName" . }}
     spec:
+      serviceAccountName: {{ include "common.names.serviceAccount" . }}
       initContainers:
       - name: alpine
         image: alpine:3.17

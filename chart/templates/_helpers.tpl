@@ -17,3 +17,11 @@
 {{- define "common.names.service" -}}
 {{ ( include "common.names.name" . ) }}-service
 {{- end -}}
+
+{{- define "common.names.serviceAccount" -}}
+{{ ( include "common.names.name" . ) }}-service-account
+{{- end -}}
+
+{{- define "common.names.role" -}}
+{{ ( include "common.names.name" . ) }}-role
+{{- end -}}
