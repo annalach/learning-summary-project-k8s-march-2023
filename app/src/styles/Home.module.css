@@ -276,3 +276,16 @@
     transform: rotate(0deg);
   }
 }
+
+.table {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.table th {
+  text-align: left;
+}
+
+.table td {
+  padding: 1rem 4em 0 0;
+}
