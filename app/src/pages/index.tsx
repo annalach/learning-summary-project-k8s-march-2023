@@ -37,7 +37,7 @@ export default function Home(props: Props): JSX.Element {
           </p>
           <div>
             <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+              href="https://github.com/annalach/"
               target="_blank"
               rel="noopener noreferrer"
             >
