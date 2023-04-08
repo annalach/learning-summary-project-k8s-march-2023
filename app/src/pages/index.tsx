@@ -1,13 +1,20 @@
 import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import { KubeConfig, CoreV1Api, V1PodList } from "@kubernetes/client-node";
+import { KubeConfig, CoreV1Api } from "@kubernetes/client-node";
 import styles from "@/styles/Home.module.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
+type Pod = {
+  name: string;
+  ready: string;
+  status: string;
+  age: string;
+};
+
 type Props = {
-  data: V1PodList;
+  pods: Pod[];
 };
 
 export default function Home(props: Props) {
@@ -54,22 +61,11 @@ export default function Home(props: Props) {
               </tr>
             </thead>
             <tbody>
-              {props.data.items.map((data, i) => (
-                <tr key={i}>
-                  <td>{data.metadata?.name}</td>
-                  <td>
-                    {`${data.status?.containerStatuses?.reduce(
-                      (previousValue, currentValue) => {
-                        if (currentValue.ready) {
-                          return previousValue + 1;
-                        }
-                        return previousValue;
-                      },
-                      0
-                    )} /
-                      ${data.status?.containerStatuses?.length}`}
-                  </td>
-                  <td>{data.status?.phase}</td>
+              {props.pods.map(({ name, status, ready, age }) => (
+                <tr key={name}>
+                  <td>{name}</td>
+                  <td>{ready}</td>
+                  <td>{status}</td>
                 </tr>
               ))}
             </tbody>
@@ -145,11 +141,41 @@ export async function getServerSideProps() {
   const k8sApi = kc.makeApiClient(CoreV1Api);
 
   const response = await k8sApi.listNamespacedPod(process.env.NAMESPACE!);
-  const data = JSON.parse(JSON.stringify(response.body));
+  console.log(JSON.stringify(response.body.items[0]));
+  const pods = response.body.items.map(({ metadata, status }) => {
+    const ready = `${status?.containerStatuses?.reduce(
+      (previousValue, currentValue) => {
+        if (currentValue.ready) {
+          return previousValue + 1;
+        }
+        return previousValue;
+      },
+      0
+    )} /
+    ${status?.containerStatuses?.length}`;
+
+    const containerStatusesSummary =
+      (status?.containerStatuses?.some(({ state }) => state?.waiting) &&
+        status?.containerStatuses?.reduce((previousValue, currentValue) => {
+          if (currentValue.state?.waiting) {
+            return currentValue.state?.waiting?.reason || previousValue;
+          }
+
+          return previousValue;
+        }, "")) ||
+      status?.phase;
+
+    return {
+      name: metadata?.name,
+      ready,
+      status: containerStatusesSummary,
+      age: "",
+    };
+  });
 
   return {
     props: {
-      data,
+      pods,
     },
   };
 }
