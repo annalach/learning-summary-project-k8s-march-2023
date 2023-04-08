@@ -77,7 +77,6 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 4rem 0;
 }
 
 .center::before {
@@ -277,9 +276,16 @@
   }
 }
 
+.info {
+  font-family: var(--font-mono);
+}
+
+.info h1 {
+  font-size: 1rem;
+}
+
 .table {
   font-family: var(--font-mono);
-  font-size: 0.85rem;
 }
 
 .table th {

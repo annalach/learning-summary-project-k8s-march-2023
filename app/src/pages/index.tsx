@@ -13,6 +13,7 @@ type Pod = {
 };
 
 type Props = {
+  namespace: string;
   pods: Pod[];
 };
 
@@ -31,8 +32,8 @@ export default function Home(props: Props): JSX.Element {
       <main className={styles.main}>
         <div className={styles.description}>
           <p>
-            Learning summary project <code className={styles.code}>k8s</code>{" "}
-            March 2023
+            Learning summary project&nbsp;
+            <code className={styles.code}>k8s</code>&nbsp;March 2023
           </p>
           <div>
             <a
@@ -43,6 +44,9 @@ export default function Home(props: Props): JSX.Element {
               By Anna Łach
             </a>
           </div>
+        </div>
+        <div className={styles.info}>
+          <h1>Pods running in {props.namespace} namespace</h1>
         </div>
         <div className={styles.center}>
           <table className={styles.table}>
@@ -136,7 +140,8 @@ export async function getServerSideProps(): Promise<ServerSideProps> {
 
   const k8sApi = kc.makeApiClient(CoreV1Api);
 
-  const response = await k8sApi.listNamespacedPod(process.env.NAMESPACE!);
+  const namespace = process.env.NAMESPACE!;
+  const response = await k8sApi.listNamespacedPod(namespace);
   const pods = response.body.items.map(({ metadata, status: podStatus }) => {
     const ready = getReady(podStatus);
     const status = getStatus(podStatus);
@@ -152,6 +157,7 @@ export async function getServerSideProps(): Promise<ServerSideProps> {
 
   return {
     props: {
+      namespace,
       pods,
     },
   };
