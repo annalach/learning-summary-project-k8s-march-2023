@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "next/font/google";
 import { KubeConfig, CoreV1Api, V1PodStatus } from "@kubernetes/client-node";
 import styles from "@/styles/Home.module.css";
@@ -29,8 +28,8 @@ export default function Home(props: Props): JSX.Element {
       <main className={styles.main}>
         <div className={styles.description}>
           <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>src/pages/index.tsx</code>
+            Learning summary project <code className={styles.code}>k8s</code>{" "}
+            March 2023
           </p>
           <div>
             <a
@@ -38,15 +37,7 @@ export default function Home(props: Props): JSX.Element {
               target="_blank"
               rel="noopener noreferrer"
             >
-              By{" "}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
+              By Anna Łach
             </a>
           </div>
         </div>
@@ -74,60 +65,57 @@ export default function Home(props: Props): JSX.Element {
         </div>
         <div className={styles.grid}>
           <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+            href="https://kubernetes.io/docs/home/"
             className={styles.card}
             target="_blank"
             rel="noopener noreferrer"
           >
             <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
+              K8s Docs <span>-&gt;</span>
             </h2>
             <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
+              Find in-depth information about Kubernetes.
             </p>
           </a>
 
           <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+            href="https://helm.sh/"
             className={styles.card}
             target="_blank"
             rel="noopener noreferrer"
           >
             <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
+              Helm Docs <span>-&gt;</span>
             </h2>
             <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
+              Find in-depth information about Helm.
             </p>
           </a>
 
           <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+            href="https://www.udemy.com/course/certified-kubernetes-application-developer/"
             className={styles.card}
             target="_blank"
             rel="noopener noreferrer"
           >
             <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
+              CKAD Course <span>-&gt;</span>
             </h2>
             <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
+              Learn about Kubernetes for applications developers.
             </p>
           </a>
 
           <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+            href="https://www.youtube.com/playlist?list=PLSwo-wAGP1b8svO5fbAr7ko2Buz6GuH1g"
             className={styles.card}
             target="_blank"
             rel="noopener noreferrer"
           >
             <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
+              Helm Course <span>-&gt;</span>
             </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
+            <p className={inter.className}>Learn Helm.</p>
           </a>
         </div>
       </main>
