@@ -78,7 +78,7 @@ export default function Home(props: Props): JSX.Element {
             rel="noopener noreferrer"
           >
             <h2 className={inter.className}>
-              K8s Docs <span>-&gt;</span>
+              Kubernetes Docs <span>-&gt;</span>
             </h2>
             <p className={inter.className}>
               Find in-depth information about Kubernetes.

@@ -1,49 +1,43 @@
-# learning-summary-project-k8s-march-2023
+# Learning summary project k8s March 2023
 
-- Node Version Manager 0.39.3
-- Node.js 19.8.1
-- npm 9.5.1
+## Prerequisites
 
-- Docker 20.10.23
-- Minikube 1.29.0
-- Kubernetes 1.26.1
-- Helm 3.11.2
+- Docker >= 20.10.23
+- Minikube >= 1.29.0
+- Kubernetes >= 1.26.1
+- Helm >= 3.11.2
 
+## Deploy to Minikube
+
+1. Build a docker image
 
 ```
 docker build -t myapp:0.1.0 -f app/Dockerfile app
 ```
 
-```
-docker run -p 8000:8000 -e PORT=8000 myapp:0.1.0
-```
+2. Load the image into Minikube
 
 ```
 minikube image load myapp:0.1.0
 ```
 
-```
-helm template chart
-```
+3. Install the Helm chart with the app
 
 ```
-helm install my-release chart
+helm install my-release chart --values=values.yaml
 ```
 
-```
-kubectl get svc
-```
+4. Wait for the "Running" state
 
 ```
-minikube service my-release-service
+kubectl get po
 ```
 
+## Visit the app via your browser
+
+Get a URL to connect to the NodePort service
 ```
-helm upgrade my-release chart --set app.readinessProbeFailure=true
+minikube service my-release
 ```
 
-A change that happens in ConfigMap doesn't trigger a rolling update of a Deployment when a ConfigMap is used as environment variables file https://github.com/kubernetes/kubernetes/issues/22368. Added `checksum/config` to Pod's annotations to automatically roll a deployment.
-
-```
-helm install app chart --set minikube=true
-```
+![App](images/app.png)

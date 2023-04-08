@@ -1,30 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "common.names.deployment" . }}
+  name: {{ .Release.Name }}
   namespace: {{ .Values.namespaces }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "common.names.appName" . }}
-  strategy: {}
+      {{- include "labels" . | indent 6 }}
   template:
     metadata:
       annotations:
         # https://helm.sh/docs/howto/charts_tips_and_tricks/#automatically-roll-deployments
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       labels:
-        app: {{ include "common.names.appName" . }}
+        {{- include "labels" . | indent 8 }}
     spec:
-      serviceAccountName: {{ include "common.names.serviceAccount" . }}
+      serviceAccountName: {{ include "name.serviceAccount" . }}
       initContainers:
       - name: alpine
         image: alpine:3.17
         command: ["sleep"] # entrypoint
         args: ["60"]       # arguments to the entrypoint
       containers:
-      - name: {{ include "common.names.appName" . }}
+      - name: myapp
         image: myapp:{{ .Chart.AppVersion }}
         resources:
           requests:
@@ -52,4 +51,4 @@ spec:
         imagePullPolicy: Never
         envFrom:
         - configMapRef:
-            name: {{ include "common.names.envVars" . }}
+            name: {{ include "name.configMap" . }}

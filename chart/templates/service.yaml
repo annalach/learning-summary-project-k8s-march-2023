@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "common.names.service" . }}
+  name: {{ .Release.Name }}
   namespace: {{ .Values.namespace }}
 spec:
   ports:
@@ -13,5 +13,5 @@ spec:
     nodePort: {{ .Values.nodePort }}
     {{- end }}
   selector:
-    app: {{ include "common.names.appName" . }}
+    {{- include "labels" . | indent 4 }}
   type: {{ if .Values.minikube }}NodePort{{ else }}ClusterIP{{ end }}

@@ -1,12 +1,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: read-pods
+  name: {{ include "name.role" . }}
   namespace: {{ .Values.namespace }}
 subjects:
 - kind: ServiceAccount
-  name: {{ include "common.names.serviceAccount" . }}
+  name: {{ include "name.serviceAccount" . }}
 roleRef:
   kind: Role
-  name: {{ include "common.names.role" . }}
+  name: {{ include "name.role" . }}
   apiGroup: rbac.authorization.k8s.io
