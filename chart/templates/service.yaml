@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   ports:
-  - name: {{ .Values.app.port }}-{{ .Values.app.port }}
+  - name: http
     port: {{ .Values.app.port }}
     protocol: TCP
     targetPort: {{ .Values.app.port }}
