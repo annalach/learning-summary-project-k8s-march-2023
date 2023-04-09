@@ -3,20 +3,19 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Values.namespace }}
+  labels: {{- include "labels.standard" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
-    matchLabels:
-      {{- include "labels" . | indent 6 }}
+    matchLabels: {{- include "labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         # https://helm.sh/docs/howto/charts_tips_and_tricks/#automatically-roll-deployments
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-      labels:
-        {{- include "labels" . | indent 8 }}
+      labels: {{- include "labels.standard" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "name.serviceAccount" . }}
+      serviceAccountName: {{ include "names.serviceAccount" . }}
       initContainers:
       - name: alpine
         image: alpine:3.17
@@ -51,4 +50,4 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         envFrom:
         - configMapRef:
-            name: {{ include "name.configMap" . }}
+            name: {{ include "names.configMap" . }}

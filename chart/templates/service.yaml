@@ -3,6 +3,7 @@ kind: Service
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Values.namespace }}
+  labels: {{- include "labels.standard" . | nindent 4 }}
 spec:
   ports:
   - name: http
@@ -12,6 +13,5 @@ spec:
     {{- if .Values.minikube }}
     nodePort: {{ .Values.nodePort }}
     {{- end }}
-  selector:
-    {{- include "labels" . | indent 4 }}
+  selector: {{- include "labels.matchLabels" . | nindent 4 }}
   type: {{ if .Values.minikube }}NodePort{{ else }}ClusterIP{{ end }}

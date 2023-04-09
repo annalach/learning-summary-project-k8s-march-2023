@@ -1,8 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "name.configMap" . }}
+  name: {{ include "names.configMap" . }}
   namespace: {{ .Values.namespace }}
+  labels: {{- include "labels.standard" . | nindent 4 }}
 data:
   PORT: {{ .Values.app.port | quote }}
   READINESS_PROBE_FAILURE: {{ .Values.app.readinessProbeFailure | quote }}
