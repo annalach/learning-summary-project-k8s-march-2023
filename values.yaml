@@ -1,1 +1,4 @@
 minikube: true
+
+image:
+  repository: myapp

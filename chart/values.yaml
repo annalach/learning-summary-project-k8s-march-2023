@@ -11,3 +11,8 @@ app:
   port: 5000
   readinessProbeFailure: false
   livenessProbeFailure: false
+
+image:
+  repository: annalach/learning-summary-project-k8s-march-2023
+  pullPolicy: IfNotPresent
+  tag: ""

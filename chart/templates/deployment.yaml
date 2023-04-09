@@ -24,7 +24,7 @@ spec:
         args: ["60"]       # arguments to the entrypoint
       containers:
       - name: myapp
-        image: myapp:{{ .Chart.AppVersion }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
         resources:
           requests:
             memory: "64Mi"  # 64 mebibytes
@@ -48,7 +48,7 @@ spec:
           timeoutSeconds: 1
           periodSeconds: 10
           failureThreshold: 3
-        imagePullPolicy: Never
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         envFrom:
         - configMapRef:
             name: {{ include "name.configMap" . }}
